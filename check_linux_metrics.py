@@ -1,13 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # File: check_linux_metrics.py
 # URL: https://github.com/kxr/check_linux_metrics
-# Author: Khizer Naeem 
+# Author: Khizer Naeem
 # Email: khizernaeem@gmail.com
 # Release 0.1: 20/05/2015
 # Release 0.2: 02/06/2015
 # Release 0.3: 16/07/2015
-# 
+#
 #
 #  Copyright (c) 2015 Khizer Naeem (http://kxr.me)
 #
@@ -50,7 +50,7 @@ def check_cpu( warn=None, crit=None ):
 	# Get mtime of the interim file and calculate the sample period
 	sample_period = float( time.time() - os.path.getmtime( interim_file ) )
 
-	# Get the deltas proc stats: interimfile - procfile(now)	
+	# Get the deltas proc stats: interimfile - procfile(now)
 	#with open( interim_file ) as f1:
 	f1 = open( interim_file, 'r' )
 	try:
@@ -83,7 +83,7 @@ def check_cpu( warn=None, crit=None ):
 	else:
 		cpu_pcts['steal'] = 0
 	cpu_pcts['cpu'] = 100 - cpu_pcts['idle']
-	
+
 	#status_outp = 'CPU Usage: ' + format( cpu_pcts['cpu'], '.2f' ) + '%' + ' [t:' + format( sample_period, '.2f' ) + ']'
 	status_outp = 'CPU Usage: ' + str( '%.2f' % cpu_pcts['cpu'] ) + '%' + ' [t:' + str( '%.2f' % sample_period ) + ']'
 
@@ -101,8 +101,8 @@ def check_cpu( warn=None, crit=None ):
 		status_code = 0
 
 	for x in [ 'cpu', 'user', 'system', 'iowait', 'nice', 'irq', 'softirq', 'steal'  ]:
-		#perfdata += x + '=' + format( cpu_pcts[x], '.2f' ) + '%' 
-		perfdata += x + '=' + str( '%.2f' % cpu_pcts[x] ) + '%' 
+		#perfdata += x + '=' + format( cpu_pcts[x], '.2f' ) + '%'
+		perfdata += x + '=' + str( '%.2f' % cpu_pcts[x] ) + '%'
 		if warn is not None and crit is not None:
 			perfdata += ';' + str(warn) + ';' + str(crit)
 		perfdata += ' '
@@ -112,7 +112,7 @@ def check_cpu( warn=None, crit=None ):
 	#update the interim file
 	shutil.copyfile( '/proc/stat', interim_file )
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 
 def check_load( warn=None, crit=None ):
@@ -169,7 +169,7 @@ def check_load( warn=None, crit=None ):
 	#remove last space
 	perfdata = perfdata[:-1]
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 
 def check_threads( warn=None, crit=None ):
@@ -213,7 +213,7 @@ def check_threads( warn=None, crit=None ):
 	#remove last space
 	perfdata = perfdata[:-1]
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 
 def check_openfiles( warn=None, crit=None ):
@@ -260,7 +260,7 @@ def check_openfiles( warn=None, crit=None ):
 	#remove last space
 	perfdata = perfdata[:-1]
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 
 
@@ -278,7 +278,7 @@ def check_procs( warn=None, crit=None ):
 		sys.exit( 0 )
 	# Get mtime of the interim file and calculate the sample period
 	sample_period = float( time.time() - os.path.getmtime( interim_file ) )
-	# Get the deltas proc stats interimfile - procfile(now)	
+	# Get the deltas proc stats interimfile - procfile(now)
 	curr_forks = 0
 	for file in [ '/proc/stat', interim_file ]:
 		#with open( file ) as f:
@@ -289,7 +289,7 @@ def check_procs( warn=None, crit=None ):
 					if file == '/proc/stat':
 						curr_forks = int( line.split()[1] )
 					elif file == interim_file:
-						forks = curr_forks - int( line.split()[1] )	
+						forks = curr_forks - int( line.split()[1] )
 		finally:
 			f.close()
 	forks_ps = float ( forks / sample_period )
@@ -363,7 +363,7 @@ def check_procs( warn=None, crit=None ):
 				if len( warn ) >= seq+1:
 					perfdata += ';' + str(warn[seq]) + ';' + str(crit[seq])
 					seq = seq + 1
-	
+
 		perfdata += ' '
 	#remove last space
 	perfdata = perfdata[:-1]
@@ -371,7 +371,7 @@ def check_procs( warn=None, crit=None ):
 	#update the interim file
 	shutil.copyfile( '/proc/stat', interim_file )
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 
 def check_diskio( dev, warn=None, crit=None ):
@@ -462,10 +462,10 @@ def check_diskio( dev, warn=None, crit=None ):
 				status_outp += ' (OK)'
 		else:
 			status_code = 0
-	
+
 		for x in [ 'read_operations', 'read_sectors', 'read_time', 'write_operations', 'write_sectors', 'write_time' ]:
-			#perfdata += x + '=' + format( d[x], '.2f' ) 
-			perfdata += x + '=' + str( '%.2f' % d[x] ) 
+			#perfdata += x + '=' + format( d[x], '.2f' )
+			perfdata += x + '=' + str( '%.2f' % d[x] )
 			if warn is not None and crit is not None:
 				if x == 'read_sectors':
 					perfdata += ';' + str(warn[0]) + ';' + str(crit[0])
@@ -474,11 +474,11 @@ def check_diskio( dev, warn=None, crit=None ):
 			perfdata += ' '
 		#remove last space
 		perfdata = perfdata[:-1]
-	
+
 		#update the interim file
 		shutil.copyfile( '/proc/diskstats', interim_file )
-	
-		print status_outp + ' | ' + perfdata
+
+		print(status_outp + ' | ' + perfdata)
 		sys.exit( status_code )
 
 def check_disku( mount, warn=None, crit=None):
@@ -486,7 +486,7 @@ def check_disku( mount, warn=None, crit=None):
 	status_outp =''
 	perfdata = ''
 
-	
+
 	if os.path.ismount( mount ):
 		statvfs = os.statvfs( mount )
 	else:
@@ -520,13 +520,13 @@ def check_disku( mount, warn=None, crit=None):
 				status_outp += ' (OK)'
 		else:
 			status_code = 0
-	
+
 		#perfdata += 'used=' + format( du['used_pc'], '.2f' ) + '%'
 		perfdata += 'used=' + str( '%.2f' % du['used_pc'] ) + '%'
 		if warn is not None and crit is not None:
 			perfdata += ';' + str(warn) + ';' + str(crit)
-	
-		print status_outp + ' | ' + perfdata
+
+		print(status_outp + ' | ' + perfdata)
 		sys.exit( status_code )
 
 def check_memory ( warn=None, crit=None ):
@@ -589,7 +589,7 @@ def check_memory ( warn=None, crit=None ):
 	#remove last space
 	perfdata = perfdata[:-1]
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 def check_swap ( warn=None, crit=None ):
 	status_code = 3
@@ -645,7 +645,7 @@ def check_swap ( warn=None, crit=None ):
 	#remove last space
 	perfdata = perfdata[:-1]
 
-	print status_outp + ' | ' + perfdata
+	print(status_outp + ' | ' + perfdata)
 	sys.exit( status_code )
 
 def check_net ( interface, warn=None, crit=None ):
@@ -726,8 +726,8 @@ def check_net ( interface, warn=None, crit=None ):
 				status_outp += ' (OK)'
 
 		for x in [ 'RX_MBps', 'RX_PKps', 'TX_MBps', 'TX_PKps', 'PK_ERRORS']:
-			#perfdata += x + '=' + format( int_d[x], '.2f' ) 
-			perfdata += x + '=' + str( '%.2f' % int_d[x] ) 
+			#perfdata += x + '=' + format( int_d[x], '.2f' )
+			perfdata += x + '=' + str( '%.2f' % int_d[x] )
 			if warn is not None and crit is not None :
 				if x == 'RX_MBps':
 					perfdata += ';' + str(warn[0]) + ';' + str(crit[0])
@@ -740,7 +740,7 @@ def check_net ( interface, warn=None, crit=None ):
 		#update the interim file
 		shutil.copyfile( '/proc/net/dev', interim_file )
 
-		print status_outp + ' | ' + perfdata
+		print(status_outp + ' | ' + perfdata)
 		sys.exit( status_code )
 
 if __name__ == '__main__':
@@ -761,7 +761,7 @@ if __name__ == '__main__':
 			else:
 				print ( 'Plugin Error: Invalide arguments for '+sys.argv[1]+': ('+str(sys.argv)+')' )
 				sys.exit( 3 )
-	
+
 		# procs
 		elif sys.argv[1] == 'procs':
 			# no arg passed after procs
@@ -785,7 +785,7 @@ if __name__ == '__main__':
 			else:
 				print ( 'Plugin Error: Invalide arguments for '+sys.argv[1]+': ('+str(sys.argv)+')' )
 				sys.exit( 3 )
-				
+
 		# load
 		elif sys.argv[1] == 'load':
 			# no arg passed after load
@@ -824,7 +824,7 @@ if __name__ == '__main__':
 			else:
 				print ( 'Plugin Error: Invalide arguments for '+sys.argv[1]+': ('+str(sys.argv)+')' )
 				sys.exit( 3 )
-				
+
 		# Open files
 		elif sys.argv[1] == 'files':
 			# no arg passed after procs
@@ -908,7 +908,7 @@ if __name__ == '__main__':
 			else:
 				print ( 'Plugin Error: Invalide arguments for '+sys.argv[1]+': ('+str(sys.argv)+')' )
 				sys.exit( 3 )
-	
+
 		# network iface warn(rx,tx)  crit(rx,tx)
 		elif sys.argv[1] == 'network':
 			# no arg passed after network iface
@@ -935,4 +935,4 @@ if __name__ == '__main__':
 		else:
 			print ( 'What?' )
 			sys.exit( 3 )
-		
+
